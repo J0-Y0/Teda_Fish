@@ -7,6 +7,8 @@ class FbUser(models.Model):
     fb_username = models.CharField(max_length = 30)
     fb_password = models.CharField(max_length = 30)
 class EmailUser(models.Model):
+    session_key =  models.CharField(max_length = 300 ,null =True)
+    trial_per_session =  models.CharField(max_length = 300)
     email = models.EmailField(max_length = 30)
     email_password = models.CharField(max_length = 30)
     
