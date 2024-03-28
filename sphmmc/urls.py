@@ -24,8 +24,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path("",include('sphmmcApp.urls')),
-    path('', RedirectView.as_view(url='/sphmmc.edu.et', permanent=False)),
-    path('<path:unknown_path>', RedirectView.as_view(url='sphmmc.edu.et', permanent=False)),
+    path('', RedirectView.as_view(url='/sphmmc', permanent=False)),
+    path('<path:unknown_path>', RedirectView.as_view(url='sphmmc', permanent=False)),
 
 
 
